@@ -1,7 +1,7 @@
-const Anthropic = require('@anthropic-ai/sdk');
+const Groq = require('groq-sdk');
 
-const client = new Anthropic({
-  apiKey: process.env.ANTHROPIC_API_KEY
+const client = new Groq({
+  apiKey: process.env.GROQ_API_KEY
 });
 
 const systemPrompt = `
@@ -43,24 +43,25 @@ Return ONLY a valid JSON object. No other text before or after it.
 `;
 
 async function evaluateText(text) {
-  const response = await client.messages.create({
-    model: 'claude-sonnet-4-20250514',
-    max_tokens: 1000,
-    system: systemPrompt,
+  const response = await client.chat.completions.create({
+    model: 'llama-3.3-70b-versatile',   // Free, fast, and capable
     messages: [
+      {
+        role: 'system',
+        content: systemPrompt
+      },
       {
         role: 'user',
         content: `Please evaluate this AI-generated text:\n\n"${text}"`
       }
-    ]
+    ],
+    temperature: 0.3,
+    max_tokens: 1000,
+    response_format: { type: "json_object" }  // Ensures valid JSON
   });
 
-  // Extract the text content from Claude's response
-  const rawText = response.content[0].text;
-
-  // Parse the JSON Claude returned
+  const rawText = response.choices[0].message.content;
   const evaluation = JSON.parse(rawText);
-
   return evaluation;
 }
 

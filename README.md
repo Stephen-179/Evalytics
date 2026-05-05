@@ -19,19 +19,19 @@ Most people judge AI responses by asking: _"Does this sound right?"_ That is a w
 | **Factuality**  | Is the information accurate and complete? What important things are missing?       |
 | **Calibration** | Does the model express appropriate uncertainty? Is confidence matched to evidence? |
 
-Each dimension is scored 0–10 with reasoning. An overall score and plain-English summary are also returned.
+Each dimension is scored 0–10 with reasoning. An overall score and plain‑English summary are also returned.
 
 ---
 
 ## Why I Built This
 
-I spent 18 months at Minddrift evaluating LLM outputs for safety, helpfulness, and factuality as part of RLHF-style alignment workflows — the same process that makes AI systems like ChatGPT and Claude better over time.
+I spent 18 months at Minddrift evaluating LLM outputs for safety, helpfulness, and factuality as part of RLHF‑style alignment workflows — the same process that makes AI systems like ChatGPT and Claude better over time.
 
 During that work, I developed a mental framework for judging AI response quality quickly and consistently. Evalytics is that framework, coded into a web application.
 
 This project sits at the exact intersection of my two core skills:
 
-- **MERN stack development** — the full application is built end-to-end with React, Node.js, Express, and MongoDB
+- **MERN stack development** — the full application is built end‑to‑end with React, Node.js, Express, and MongoDB
 - **LLM evaluation expertise** — the evaluation logic reflects real professional annotation experience, not theoretical knowledge
 
 ---
@@ -52,22 +52,22 @@ This project sits at the exact intersection of my two core skills:
 
 ### Database
 
-- **MongoDB Atlas** — cloud-hosted database (free tier)
+- **MongoDB Atlas** — cloud‑hosted database (free tier)
 
 ### AI
 
-- **OpenRouter API** — access to multiple LLM models for evaluation
-- Model: `mistralai/mistral-7b-instruct` (free tier)
+- **Groq** — lightning‑fast LLM inference API (free tier, no credit card required)
+- Model: `llama-3.3-70b-versatile` (70B parameters, 128k context window)
 
 ---
 
 ## Features
 
-- **Paste and evaluate** — submit any AI-generated text in seconds
-- **4-dimension scoring** — Safety, Helpfulness, Factuality, Calibration (0–10 each)
-- **Visual score bars** — colour-coded green / amber / red based on score
-- **Reasoning per dimension** — not just a score, but a one-sentence explanation
-- **Plain-English summary** — overall assessment of the response quality
+- **Paste and evaluate** — submit any AI‑generated text in seconds
+- **4‑dimension scoring** — Safety, Helpfulness, Factuality, Calibration (0–10 each)
+- **Visual score bars** — colour‑coded green / amber / red based on score
+- **Reasoning per dimension** — not just a score, but a one‑sentence explanation
+- **Plain‑English summary** — overall assessment of the response quality
 - **Evaluation history** — all past evaluations stored in MongoDB and displayed on the page
 - **Character limit** — 5,000 character cap with live counter
 
@@ -76,32 +76,34 @@ This project sits at the exact intersection of my two core skills:
 ## Project Structure
 
 ```
+
 evalytics/
-├── client/                         # React frontend (Vite)
-│   ├── src/
-│   │   ├── components/
-│   │   │   ├── ScoreBar.jsx        # Visual score bar component
-│   │   │   ├── ScoreCard.jsx       # Full evaluation results display
-│   │   │   └── History.jsx         # Past evaluations list
-│   │   ├── App.jsx                 # Main application component
-│   │   ├── index.css               # Global styles
-│   │   └── main.jsx                # React entry point
-│   ├── .env                        # Frontend environment variables
-│   └── package.json
+├── client/ # React frontend (Vite)
+│ ├── src/
+│ │ ├── components/
+│ │ │ ├── ScoreBar.jsx # Visual score bar component
+│ │ │ ├── ScoreCard.jsx # Full evaluation results display
+│ │ │ └── History.jsx # Past evaluations list
+│ │ ├── App.jsx # Main application component
+│ │ ├── index.css # Global styles
+│ │ └── main.jsx # React entry point
+│ ├── .env # Frontend environment variables
+│ └── package.json
 │
-├── server/                         # Node.js + Express backend
-│   ├── models/
-│   │   └── Evaluation.js           # MongoDB schema
-│   ├── routes/
-│   │   └── evaluate.js             # POST /api/evaluate + GET /api/evaluate/history
-│   ├── services/
-│   │   └── claudeService.js        # LLM API call + response parsing
-│   ├── .env                        # Backend environment variables (never commit)
-│   ├── .gitignore
-│   ├── server.js                   # Express app entry point
-│   └── package.json
+├── server/ # Node.js + Express backend
+│ ├── models/
+│ │ └── Evaluation.js # MongoDB schema
+│ ├── routes/
+│ │ └── evaluate.js # POST /api/evaluate + GET /api/evaluate/history
+│ ├── services/
+│ │ └── claudeService.js # Groq API call + response parsing
+│ ├── .env # Backend environment variables (never commit)
+│ ├── .gitignore
+│ ├── server.js # Express app entry point
+│ └── package.json
 │
 └── README.md
+
 ```
 
 ---
@@ -121,7 +123,7 @@ git --version     # any recent version
 You also need:
 
 - A **MongoDB Atlas** account — [mongodb.com/atlas](https://mongodb.com/atlas) (free)
-- An **OpenRouter** API key — [openrouter.ai](https://openrouter.ai) (free, no credit card)
+- A **Groq** API key — [console.groq.com/keys](https://console.groq.com/keys) (free, no credit card)
 
 ---
 
@@ -144,7 +146,7 @@ npm install
 Create a `.env` file inside the `server` folder:
 
 ```env
-OPENROUTER_API_KEY=your-openrouter-api-key
+GROQ_API_KEY=your-groq-api-key
 MONGODB_URI=your-mongodb-atlas-connection-string
 PORT=5000
 ```
@@ -195,11 +197,19 @@ Open **http://localhost:5173** in your browser.
 
 ## How to Use
 
-1. Paste any AI-generated text into the text area
-2. Click **Evaluate Text**
-3. Wait 3–5 seconds while the LLM evaluates the input
-4. View your scores, reasoning, and summary
-5. All evaluations are saved to your history automatically
+1. Paste any AI-generated text into the text area.
+
+   ![Text input area](images/eva1.png)
+
+2. Click **Evaluate Text** and wait 3–5 seconds while Groq evaluates the input.
+
+3. View your scores, reasoning per dimension, and a plain‑English summary.
+
+   ![Evaluation analysis](images/eva2.png)
+
+4. All evaluations are automatically saved to the history panel at the bottom of the page.
+
+   ![Evaluation history](images/eva3.png)
 
 ---
 
@@ -213,7 +223,7 @@ Evaluates submitted text and saves the result to MongoDB.
 
 ```json
 {
-  "text": "The AI-generated text you want to evaluate..."
+  "text": "The AI‑generated text you want to evaluate..."
 }
 ```
 
@@ -235,7 +245,7 @@ Evaluates submitted text and saves the result to MongoDB.
     "factuality": "Contains a significant factual error regarding the Great Wall.",
     "calibration": "States incorrect facts with high confidence."
   },
-  "summary": "The response is safe but contains factual inaccuracies stated with unwarranted confidence. It would benefit from hedging and fact-checking before use.",
+  "summary": "The response is safe but contains factual inaccuracies stated with unwarranted confidence. It would benefit from hedging and fact‑checking before use.",
   "createdAt": "2026-04-30T08:22:13.000Z"
 }
 ```
@@ -270,7 +280,7 @@ Returns the 20 most recent evaluations.
 
 ## The Evaluation Framework
 
-The 4-dimension framework used in Evalytics comes directly from professional LLM evaluation work. Here is how each dimension is defined:
+The 4‑dimension framework used in Evalytics comes directly from professional LLM evaluation work. Here is how each dimension is defined:
 
 ### Safety (0–10)
 
@@ -324,7 +334,7 @@ Understanding these failure modes is the difference between someone who uses AI 
 - [ ] User authentication (JWT) — personal evaluation history
 - [ ] Batch evaluation — evaluate multiple responses at once
 - [ ] Export evaluations as CSV — for use in ML pipelines
-- [ ] Pairwise comparison mode — compare two AI responses side by side (RLHF-style)
+- [ ] Pairwise comparison mode — compare two AI responses side by side (RLHF‑style)
 - [ ] Model selector — choose which LLM does the evaluation
 - [ ] Evaluation templates — custom rubrics for different use cases
 
@@ -344,8 +354,8 @@ MIT — free to use, modify, and distribute.
 
 ## Author
 
-**Stephen Sifa Mwatsaka**
-Full-Stack MERN Developer | LLM Evaluation | Certified Project Manager
+**Stephen Sifa Mwatsaka**  
+Full‑Stack MERN Developer | LLM Evaluation | Certified Project Manager
 
 - GitHub: [@Stephen-179](https://github.com/Stephen-179)
 - LinkedIn: [linkedin.com/in/stephenmwatsaka-0295b0320](https://linkedin.com/in/stephenmwatsaka-0295b0320)
